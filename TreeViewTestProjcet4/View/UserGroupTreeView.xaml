@@ -1,0 +1,73 @@
+﻿<UserControl x:Class="TreeViewTestProjcet4.View.UserGroupView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TreeViewTestProjcet4.View"
+             xmlns:model="clr-namespace:TreeViewTestProjcet4.Model"
+             xmlns:viewModel="clr-namespace:TreeViewTestProjcet4.ViewModel"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             mc:Ignorable="d" 
+             d:DesignHeight="575" d:DesignWidth="250">
+
+    <UserControl.DataContext>
+        <viewModel:UserGroupTreeViewModel/>
+    </UserControl.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <TreeView x:Name="treeView" ItemsSource="{Binding ParentGroupList}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectedItemChanged">
+                        <i:InvokeCommandAction Command="{Binding CommandSelectedItem}" CommandParameter="{Binding ElementName=treeView, Path=SelectedItem}"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                        <i:InvokeCommandAction Command="{Binding CommandLeftDown}" CommandParameter="{Binding ElementName=treeView, Path=SelectedItem}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                
+                <TreeView.Resources>
+                    <ContextMenu x:Key="ParentMenu" >
+                        <MenuItem Header="추가"/>
+                        <MenuItem Header="삭제"/>
+                    </ContextMenu>
+                    <ContextMenu x:Key="ChildMenu" >
+                        <MenuItem Header="추가"/>
+                        <MenuItem Header="삭제"/>
+                    </ContextMenu>
+                </TreeView.Resources>
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate DataType="{x:Type model:UserGroupTreeModel}" ItemsSource="{Binding ChildGroupList}">
+                        <TextBlock Grid.Column="0" Text="{Binding Header}"/>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+                <TreeView.ItemContainerStyle>
+                    <Style TargetType="{x:Type TreeViewItem}">
+                        <Setter Property="ContextMenu" Value="{StaticResource ChildMenu}"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="FontWeight" Value="Bold" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </TreeView.ItemContainerStyle>
+            </TreeView>
+        </Grid>
+        <Grid Grid.Row="1">
+            <TextBox Text="{Binding InputHeader}"/>
+            <Button Content="Add" Width="50" HorizontalAlignment="Right" Margin="0,0,50,0"
+                    Command="{Binding CommandTreeAddClick}" CommandParameter="{Binding ElementName=treeView}"/>
+            <Button Content="Delete" Width="50" HorizontalAlignment="Right" 
+                    Command="{Binding CommandTreeDeleteClick}" CommandParameter="{Binding ElementName=treeView}"/>
+        </Grid>
+    </Grid>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="MouseLeftButtonDown">
+            <i:InvokeCommandAction Command="{Binding CommandSelectedItem}" CommandParameter="{Binding ElementName=treeView}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+</UserControl>

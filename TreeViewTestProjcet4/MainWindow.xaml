@@ -1,0 +1,50 @@
+﻿<Window x:Class="TreeViewTestProjcet4.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:view="clr-namespace:TreeViewTestProjcet4.View"
+        xmlns:model="clr-namespace:TreeViewTestProjcet4.Model"
+        xmlns:viewModel="clr-namespace:TreeViewTestProjcet4.ViewModel"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        mc:Ignorable="d"
+        WindowStyle="None"
+        WindowState="{Binding State}"
+        Title="MainWindow" Height="600" Width="1200">
+
+    <Window.DataContext>
+        <viewModel:MainWindowViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="8*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <view:TitleView DataContext="{Binding Source={x:Static viewModel:MainWindowViewModel.titleBarViewModel}}"/>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <view:ContentTitleView Grid.Column="0" DataContext="{Binding Source={x:Static viewModel:MainWindowViewModel.contentTitleViewModel}}"/>
+            <view:SystemTimeView Grid.Column="1" DataContext="{Binding Source={x:Static viewModel:MainWindowViewModel.systemTimeViewModel}}"/>
+        </Grid>
+        <Grid Grid.Row="2">
+            <TabControl TabStripPlacement="Left">
+                <TabItem Header="CONFIG FILE">
+                    <Label Content="CONFIG FILE" FontSize="50"/>
+                </TabItem>
+                <TabItem Header="SYSTEM CONFIG">
+                    <Label Content="SYSTEM CONFIG" FontSize="50"/>
+                </TabItem>
+                <TabItem Header="USER MANAGE">
+                    <view:UserManageView/>
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </Grid>
+</Window>
